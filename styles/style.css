@@ -107,7 +107,7 @@ header #search a {
 }
 
 header #search a:hover {
-  background: rgb(34, 207, 207);
+  background: rgb(5, 168, 243);
 }
 
 header #search img {
@@ -132,7 +132,7 @@ header #search.active input {
 }
 
 header #search.active a {
-  background: rgb(34, 207, 207);
+  background: rgb(5, 168, 243);
 }
 
 header nav a {
@@ -146,8 +146,8 @@ header nav a {
 }
 
 header nav a:hover {
-  background-color: rgba(21, 135, 163, 0.637);
-  color: rgb(36, 194, 181);
+  background-color: rgb(5, 168, 243);
+  color: rgb(8, 248, 80);
 }
 
 nav ul {
@@ -160,7 +160,7 @@ nav ul {
 
 nav ul li {
 	display:inline-block;
-	background-color: rgb(3, 117, 146);
+	background-color: rgb(19, 141, 197);
   position: relative;
 }
 
