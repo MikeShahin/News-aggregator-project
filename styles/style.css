@@ -1,4 +1,8 @@
 /* General styles */
+body {
+  background-color: rgb(32, 32, 32);
+  
+}
 .container {
   max-width: 1000px;
   margin: 0 auto;
@@ -59,7 +63,7 @@
 
 /* Header styles */
 header {
-  background-color: #FE052C;
+  background-color: rgb(19, 141, 197);
   position: fixed;
   top: 0;
   left: 0;
@@ -67,7 +71,7 @@ header {
 }
 
 header h1 {
-  color: #FFF;
+  color: rgb(32, 32, 32);
   padding: 10px 2%;
   margin: 0;
   width: 16%;
@@ -103,7 +107,7 @@ header #search a {
 }
 
 header #search a:hover {
-  background: #CC0020;
+  background: rgb(34, 207, 207);
 }
 
 header #search img {
@@ -128,13 +132,13 @@ header #search.active input {
 }
 
 header #search.active a {
-  background: #CC0020;
+  background: rgb(34, 207, 207);
 }
 
 header nav a {
   display:block;
 	padding:0 10px;
-	color:#FFF;
+	color:rgb(14, 11, 11);
 	font-size:16px;
 	line-height: 40px;
 	text-decoration:none;
@@ -142,8 +146,8 @@ header nav a {
 }
 
 header nav a:hover {
-  background-color: #fff;
-  color: #CC0020;
+  background-color: rgba(21, 135, 163, 0.637);
+  color: rgb(36, 194, 181);
 }
 
 nav ul {
@@ -156,7 +160,7 @@ nav ul {
 
 nav ul li {
 	display:inline-block;
-	background-color: #CC0020;
+	background-color: rgb(3, 117, 146);
   position: relative;
 }
 
@@ -193,7 +197,7 @@ nav ul ul li {
 
 .article:hover {
   padding: 0 2%;
-  background-color: #eee;
+  background-color: rgb(76, 84, 88);
 }
 
 .article .featuredImage {
@@ -219,12 +223,12 @@ nav ul ul li {
 
 .article .articleContent h3 {
   margin-bottom: 0;
-  color: #FE052C;
+  color: rgb(5, 175, 254);
 }
 
 .article .articleContent h6 {
   margin-top: 0;
-  color: #666;
+  color: rgb(138, 130, 130);
 }
 
 .article .impressions {

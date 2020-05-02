@@ -1,6 +1,4 @@
-//////////////////////////////////////////
-// Add all Javascript code to this file.    
-/////////////////////////////////////////
+//Global variable declarations
 const articles = document.querySelectorAll('.article h3');
 const images = document.querySelectorAll('.featuredImage img');
 const link = document.querySelectorAll('.articleContent a');
@@ -10,28 +8,22 @@ const guardianKey = key1;
 const newsApiOrgKey = key2;
 const eRKey = key3;
 
-const searchIcon = document.querySelector('#search img');
+const searchIcon = document.querySelector('#search a');
 const searchBox = document.querySelector('#search input');
-let search = searchBox.value; 
+let search; 
 
 let sourceSelect1 = document.querySelector('#one');
 let sourceSelect2 = document.querySelector('#two');
 let sourceSelect3 = document.querySelector('#three');
 
 let currentSource = document.querySelector('#currentSource');
-console.log(currentSource)
 
 let nUrl = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${newsApiOrgKey}`;
-let gUrl = `https://content.guardianapis.com/search?page-size=25&api-key=${guardianKey}`;
+let gUrl = `https://content.guardianapis.com/search?page-size=50&api-key=${guardianKey}`;
 let eRUrl = `http://eventregistry.org/api/v1/article/getArticles?query=%7B%22%24query%22%3A%7B%22lang%22%3A%22eng%22%7D%7D&dataType=news&resultType=articles&articlesSortBy=date&articlesCount=100&articleBodyLen=-1&apiKey=${eRKey}`
-// if (search === "") {
-//     url = `https://content.guardianapis.com/search?page-size=25&api-key=${guardianKey}`
-// } else {
-//     url = `https://content.guardianapis.com/search?q=${search}page-size=25&api-key=${guardianKey}`
-// }
 let imageArray = ['images/article_placeholder_1.jpg', 'images/article_placeholder_2.jpg']; 
 
-//Create  function to make article template:
+//Function for article template:
 let articleTemp = function(imgSource, artURL, artName, artCategory) {
     let $container = $('#main');
     let $articleMain = $('<article></article>').addClass('article');
@@ -54,7 +46,7 @@ let articleTemp = function(imgSource, artURL, artName, artCategory) {
     $($container).append($articleMain);
 }
 
-//initial Fetch functions:
+//Fetch functions:
 //newsApi
 let newsAPI = function() {
     fetch(nUrl) 
@@ -71,7 +63,7 @@ let newsAPI = function() {
             
             // const image = imageArray.random;
             const image = article.urlToImage;
-            const articleLink = article.url;
+            const articleLink = article.url//"#";
             const title = article.title;
             const categ = article.source.name;
         
@@ -142,55 +134,66 @@ sourceSelect3.addEventListener('click', (e) => {
     eventRegistery();   
 });
 
-//getting search to work
-// const searchIcon = document.querySelector('#search img');
-// const searchBox = document.querySelector('#search input');
-// let search; 
-// //console.log(search);
-// console.log(searchBox);
-// function completedSearch() {
+//Search:
     searchIcon.addEventListener('click', (event) => {
         $('#search').toggleClass("active");
-        //console.log(search)
-        
         event.preventDefault();
         
         document.addEventListener('keypress', (e) => {
             search = searchBox.value;
-            // e.preventDefault();
             if (e.key === 'Enter') {
-                //hit enter, do fetch call
-    
-                //return json
-    
-                //grab data, set newsResult
-    
-                //remove all old articles
-    
-                //iterate through data and add new articles
-                 
-                console.log(search);
-                console.log(url);
-                // $('#search').toggleClass("active");
+                if (currentSource.textContent == "News Api.org") {
+                    nUrl = `https://newsapi.org/v2/everything?q=${search}&apiKey=${newsApiOrgKey}`
+                $('.article').remove();
+                $('#search').removeClass("active");
+                newsAPI();
+                search = ""
+                nUrl = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${newsApiOrgKey}`;
+                } else if (currentSource.textContent == "The Guardian") {
+                    gUrl = `https://content.guardianapis.com/search?page-size=25&q=${search}&api-key=${guardianKey}`
+                $('.article').remove();
+                $('#search').removeClass("active");
+                guardian();
+                search = ""
+                gUrl = `https://content.guardianapis.com/search?page-size=50&api-key=${guardianKey}`;
+                } else if (currentSource.textContent == "Event Registry") {
+                    eRUrl = `https://eventregistry.org/api/v1/article/getArticles?query=%7B%22%24query%22%3A%7B%22%24and%22%3A%5B%7B%22keyword%22%3A%22${search}%22%2C%22keywordLoc%22%3A%22body%22%7D%2C%7B%22lang%22%3A%22eng%22%7D%5D%7D%7D&dataType=news&resultType=articles&articlesSortBy=date&articlesCount=50&articleBodyLen=-1&apiKey=${eRKey}`
+                $('.article').remove();
+                $('#search').removeClass("active");
+                eventRegistery();
+                search = ""
+                eRUrl = `http://eventregistry.org/api/v1/article/getArticles?query=%7B%22%24query%22%3A%7B%22lang%22%3A%22eng%22%7D%7D&dataType=news&resultType=articles&articlesSortBy=date&articlesCount=50&articleBodyLen=-1&apiKey=${eRKey}`
+
                 }
-            
-                console.log(search)
-            }); 
-            
+            }
+            });             
     });
 
 //Get Popup working:
-const articleBox = document.querySelector("h6");
+const articleBox = document.querySelector(".articleContent");
 //   console.log(articleBox);
   //check if articleContent class is on page
-if (articleBox !== null) {
-    console.log(articleBox);
-    console.log('ok');
-    articleBox.addEventListener('click', (e) => {
-    console.log("working")
-    e.preventDefault();
-    });
-}
+// if (articleBox !== null) {
+//     console.log(articleBox);
+//     console.log('ok');
+//     articleBox.addEventListener('click', (e) => {
+//     console.log("working")
+//     e.preventDefault();
+//     });
+// }
+// let popUp = function() {
+    // setTimeout(articleBox.addEventListener('click', (event) => {
+    //     //   $('#popup').toggleClass("loader hidden");
+    //       console.log("hello")
+    //       event.preventDefault();
+    // }), 1000);
+// }
+// if (document.querySelector(".artcleContent") !== null) {
+//     const articleBox = document.querySelector(".articleContent");
+//     console.log("derp");
+// }
+// popUp();
+
   //If its on page, grab articleContent by query selector
 
   //then do logic
