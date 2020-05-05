@@ -25,24 +25,43 @@ let nUrl = `https://newsapi.org/v2/top-headlines?country=us&page=${nPage}&pageSi
 let gUrl = `https://content.guardianapis.com/search?show-fields=trailText%2Cthumbnail&page=${gPage}&page-size=50&api-key=${guardianKey}`;
 let eRUrl = `http://eventregistry.org/api/v1/article/getArticles?query=%7B%22%24query%22%3A%7B%22lang%22%3A%22eng%22%7D%7D&dataType=news&resultType=articles&articlesSortBy=date&articlesPage=${eRPage}&articlesCount=50&articleBodyLen=-1&apiKey=${eRKey}`
 
+//Article Template:
+let articleTemp = function(id, imgSource, artURL, artName, artCategory) {
+    let $container = $('#main');
+    let $articleMain = $('<article></article>').addClass('article').attr("id", id);
+    let $featImg = $("<section></section>").addClass('featuredImage');
+    let $img = $('<img></img>').attr('src', imgSource );
+    let $artCont = $("<section></section>").addClass('articleContent');
+    let $artLink = $("<a></a>").attr("href", "#")
+    let $artHeadline = $('<h3></h3>').text(artName);
+    let $artCat = $('<h6></h6>').text(artCategory);
+    let $impressions = $('<section></section>').addClass('impressions');
+    let $clearfix = $('<div></div>').addClass('clearfix');
+    $($featImg).append($img);
+    $($articleMain).append($featImg);
+    $($artLink).append($artHeadline);
+    $($artCont).append($artLink);
+    $($artCont).append($artCat);
+    $($articleMain).append($artCont);
+    $($articleMain).append($impressions);
+    $($articleMain).append($clearfix);
+    $($container).append($articleMain);
+    return $artCont;
+};
+
 //Fetch functions:
 //newsApi
 let newsAPI = function() {
     fetch(nUrl) 
     .then(response => {
-        //console.log(response);
         return response.json();
     })
     .then(data => {
-        // console.log(data)
         const newsResult = data.articles;
-        // console.log(newsResult);
         for(let i = 0; i < newsResult.length; i++) {
             let article = newsResult[i];
-            
-            // const image = imageArray.random;
             const image = article.urlToImage;
-            const url = article.url//"#";
+            const url = article.url;
             const title = article.title;
             const categ = article.source.name;
             id = [i];
@@ -52,8 +71,9 @@ let newsAPI = function() {
         }
     nPopUp(data);
     });
-}
+};
 newsAPI();
+
 //Guardian
 let guardian = function() {
     fetch(gUrl) 
@@ -74,7 +94,8 @@ let guardian = function() {
         }
     gPopUp(data);
     })
-}
+};
+
 //Event Registry
 let eventRegistery = function() {
     fetch(eRUrl) 
@@ -100,84 +121,64 @@ let eventRegistery = function() {
         }
     eRPopUp(data);
     })
-}
-//Article Template:
-let articleTemp = function(id, imgSource, artURL, artName, artCategory) {
-    let $container = $('#main');
-    let $articleMain = $('<article></article>').addClass('article').attr("id", id);
-    let $featImg = $("<section></section>").addClass('featuredImage');
-    let $img = $('<img></img>').attr('src', imgSource );
-    let $artCont = $("<section></section>").addClass('articleContent');
-    let $artLink = $("<a></a>").attr("href", "#")
-    let $artHeadline = $('<h3></h3>').text(artName);
-    let $artCat = $('<h6></h6>').text(artCategory);
-    let $impressions = $('<section></section>').addClass('impressions');
-    let $clearfix = $('<div></div>').addClass('clearfix');
-    $($featImg).append($img);
-    $($articleMain).append($featImg);
-    $($artLink).append($artHeadline);
-    $($artCont).append($artLink);
-    $($artCont).append($artCat);
-    $($articleMain).append($artCont);
-    $($articleMain).append($impressions);
-    $($articleMain).append($clearfix);
-    $($container).append($articleMain);
-    return $artCont;
 };
+
 //popup
 const nPopUp = function(data)  {
-    $('.articleContent').click((e) => {
-        const i = e.currentTarget.parentNode.attributes.id.value;
-        console.log(i);
-        const title = data.articles[i].title;
-        const content = data.articles[i].content
-        const url = data.articles[i].url;
-        $('#popUp .container h1').text(title);
-        $('#popUp .container p').text(content);
-        $('#popUp .container a').attr("href", url);
-        $('#popUp').removeClass('loader hidden');
+$('.articleContent').click((e) => {
+    const i = e.currentTarget.parentNode.attributes.id.value;
+    console.log(i);
+    const title = data.articles[i].title;
+    const content = data.articles[i].content
+    const url = data.articles[i].url;
+    $('#popUp .container h1').text(title);
+    $('#popUp .container p').text(content);
+    $('#popUp .container a').attr("href", url);
+    $('#popUp').removeClass('loader hidden');
+    e.preventDefault();
+});
+};
+$('.closePopUp').click((e) => {
+    $('#popUp').addClass('loader hidden');
+    e.preventDefault();
+});
+
+const gPopUp = function(data)  {
+$('.articleContent').click((e) => {
+    const i = e.currentTarget.parentNode.attributes.id.value;
+    const gTitle = data.response.results[i].webTitle;
+    const gContent = data.response.results[i].fields.trailText;
+    const gUrl = data.response.results[i].webUrl;
+    $('#popUp .container h1').text(gTitle);
+    $('#popUp .container p').text(gContent);
+    $('#popUp .container a').attr("href", gUrl);
+    $('#popUp').removeClass('loader hidden');
+    e.preventDefault();
+});
+    $('.closePopUp').click((e) => {
+        $('#popUp').addClass('loader hidden');
         e.preventDefault();
 });
-    };
-    $('.closePopUp').click((e) => {
-      $('#popUp').addClass('loader hidden');
-      e.preventDefault();
-    });
+};
 
-  const gPopUp = function(data)  {
-    $('.articleContent').click((e) => {
-        const i = e.currentTarget.parentNode.attributes.id.value;
-        const gTitle = data.response.results[i].webTitle;
-        const gContent = data.response.results[i].fields.trailText;
-        const gUrl = data.response.results[i].webUrl;
-        $('#popUp .container h1').text(gTitle);
-        $('#popUp .container p').text(gContent);
-        $('#popUp .container a').attr("href", gUrl);
-        $('#popUp').removeClass('loader hidden');
-        e.preventDefault();
-    });
-    $('.closePopUp').click((e) => {
-      $('#popUp').addClass('loader hidden');
-      e.preventDefault();
-    });
-  };
-  const eRPopUp = function(data)  {
-    $('.articleContent').click((e) => {
-        const i = e.currentTarget.parentNode.attributes.id.value;
-        const title = data.articles.results[i].title;
-        const content = data.articles.results[i].body
-        const url = data.articles.results[i].url;
-        $('#popUp .container h1').text(title);
-        $('#popUp .container p').text(content);
-        $('#popUp .container a').attr("href", url);
-        $('#popUp').removeClass('loader hidden');
-        e.preventDefault();
-    });
-    $('.closePopUp').click((e) => {
-      $('#popUp').addClass('loader hidden');
-      e.preventDefault();
-    });
-  }; 
+const eRPopUp = function(data)  {
+$('.articleContent').click((e) => {
+    const i = e.currentTarget.parentNode.attributes.id.value;
+    const title = data.articles.results[i].title;
+    const content = data.articles.results[i].body
+    const url = data.articles.results[i].url;
+    $('#popUp .container h1').text(title);
+    $('#popUp .container p').text(content);
+    $('#popUp .container a').attr("href", url);
+    $('#popUp').removeClass('loader hidden');
+    e.preventDefault();
+});
+$('.closePopUp').click((e) => {
+    $('#popUp').addClass('loader hidden');
+    e.preventDefault();
+});
+};
+
 //sources tab:
 sourceSelect1.addEventListener('click', (e) => {
     e.preventDefault();
@@ -210,7 +211,6 @@ $('#search a').click((event) => {
         if (e.key === 'Enter') {
             switch(currentSource.textContent) {
                 case "News Api.org":
-                    nPage = 1
                     nUrl = `https://newsapi.org/v2/everything?q=${search}&page=${nPage}&pageSize=50&apiKey=${newsApiOrgKey}`;
                     $('.article').remove();
                     $('#search').removeClass("active");
