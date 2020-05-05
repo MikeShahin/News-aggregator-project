@@ -10,7 +10,7 @@ body {
 
 #popUp {
   opacity: 0.95;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -20,11 +20,11 @@ body {
 }
 
 #popUp .closePopUp {
-  position: absolute;
+  position: fixed;
   top: 20px;
   right: 20px;
   font-size: 40px;
-  color: rgb(5, 51, 254);
+  color: rgb(19, 141, 197);
   text-decoration: none;
 }
 
@@ -49,7 +49,7 @@ body {
 
 #popUp .popUpAction {
   padding: 10px;
-  background-color: rgb(77, 151, 70);
+  background-color: rgb(209, 53, 144);
   color: #fff;
   text-decoration: none;
   border-radius: 5px;
@@ -60,7 +60,7 @@ body {
 
 #popUp .popUpAction:hover {
   color: rgb(204, 182, 185);
-  background: rgb(40, 88, 36);
+  background: rgb(179, 34, 118);
 }
 
 /* Header styles */
@@ -240,4 +240,11 @@ nav ul ul li {
   margin-top: 15px;
   text-align: right;
   color: #097FB2;
+}
+
+/* Next Button */
+#next {
+  position: absolute;
+  
+  left: 50%;
 }

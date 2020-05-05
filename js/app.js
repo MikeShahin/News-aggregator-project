@@ -7,6 +7,7 @@ const sourceSelect1 = document.querySelector('#one');
 const sourceSelect2 = document.querySelector('#two');
 const sourceSelect3 = document.querySelector('#three');
 const currentSource = document.querySelector('#currentSource');
+const header1 = document.querySelector("header .container h1");
 
 const guardianKey = key1;
 const newsApiOrgKey = key2;
@@ -15,12 +16,14 @@ const eRKey = key3;
 const searchIcon = document.querySelector('#search a');
 const searchBox = document.querySelector('#search input');
 let search; 
+let id;
 
 let gPage = 1;
 let nPage = 1;
-let nUrl = `https://newsapi.org/v2/top-headlines?country=us&pageSize=50&apiKey=${newsApiOrgKey}`;
-let gUrl = `https://content.guardianapis.com/search?show-fields=trailText%2Cthumbnail&page-size=50&api-key=${guardianKey}`;
-let eRUrl = `http://eventregistry.org/api/v1/article/getArticles?query=%7B%22%24query%22%3A%7B%22lang%22%3A%22eng%22%7D%7D&dataType=news&resultType=articles&articlesSortBy=date&articlesCount=50&articleBodyLen=-1&apiKey=${eRKey}`
+let eRPage = 1;
+let nUrl = `https://newsapi.org/v2/top-headlines?country=us&page=${nPage}&pageSize=50&apiKey=${newsApiOrgKey}`;
+let gUrl = `https://content.guardianapis.com/search?show-fields=trailText%2Cthumbnail&page=${gPage}&page-size=50&api-key=${guardianKey}`;
+let eRUrl = `http://eventregistry.org/api/v1/article/getArticles?query=%7B%22%24query%22%3A%7B%22lang%22%3A%22eng%22%7D%7D&dataType=news&resultType=articles&articlesSortBy=date&articlesPage=${eRPage}&articlesCount=50&articleBodyLen=-1&apiKey=${eRKey}`
 
 //Fetch functions:
 //newsApi
@@ -42,7 +45,7 @@ let newsAPI = function() {
             const url = article.url//"#";
             const title = article.title;
             const categ = article.source.name;
-            let id = [i];
+            id = [i];
         
             articleTemp(id, image, url, title, categ);
             
@@ -65,7 +68,7 @@ let guardian = function() {
             const url = article.webUrl;
             const title = article.webTitle;
             const categ = article.sectionName;
-            let id = [i];
+            id = [i];
         
         articleTemp(id, image, url, title, categ);
         }
@@ -91,7 +94,7 @@ let eventRegistery = function() {
             const url = article.url;
             const title = article.title;
             const categ = article.source.title;
-            let id = [i];
+            id = [i];
         
         articleTemp(id, image, url, title, categ);
         }
@@ -134,12 +137,12 @@ const nPopUp = function(data)  {
         $('#popUp .container a').attr("href", url);
         $('#popUp').removeClass('loader hidden');
         e.preventDefault();
-    });
+});
+    };
     $('.closePopUp').click((e) => {
       $('#popUp').addClass('loader hidden');
       e.preventDefault();
     });
-  };
 
   const gPopUp = function(data)  {
     $('.articleContent').click((e) => {
@@ -177,17 +180,23 @@ const nPopUp = function(data)  {
   }; 
 //sources tab:
 sourceSelect1.addEventListener('click', (e) => {
+    e.preventDefault();
     $('.article').remove();
+    nPage = 1;
     currentSource.textContent = "News Api.org";
     newsAPI();
 });
 sourceSelect2.addEventListener('click', (e) => {
+    e.preventDefault();
     $('.article').remove();
+    gPage = 1;
     currentSource.textContent = "The Guardian";
     guardian();
 });
 sourceSelect3.addEventListener('click', (e) => {
+    e.preventDefault();
     $('.article').remove();
+    eRPage = 1;
     currentSource.textContent = "Event Registry";
     eventRegistery();   
 });
@@ -201,7 +210,8 @@ $('#search a').click((event) => {
         if (e.key === 'Enter') {
             switch(currentSource.textContent) {
                 case "News Api.org":
-                    nUrl = `https://newsapi.org/v2/everything?q=${search}&pageSize=50&apiKey=${newsApiOrgKey}`;
+                    nPage = 1
+                    nUrl = `https://newsapi.org/v2/everything?q=${search}&page=${nPage}&pageSize=50&apiKey=${newsApiOrgKey}`;
                     $('.article').remove();
                     $('#search').removeClass("active");
                     newsAPI();
@@ -227,25 +237,30 @@ $('#search a').click((event) => {
                 }
             }
         })
-    });             
-    //scroll
-    // window.onscroll = function () {
-    //     if (window.scrollY > (document.body.offsetHeight - window.outerHeight)) {
-    //         switch(currentSource.textContent) {
-    //             case "News Api.org":
-    //                 nPage++
-    //                 nUrl = `https://newsapi.org/v2/top-headlines?country=us&page=${nPage}&pageSize=50&apiKey=${newsApiOrgKey}`;
-    //                 eventRegistery();
+    });           
+    //reload on click:
+    header1.addEventListener('click', () => {
+        location.reload();
+    })  
 
-    //             case "The Guardian":
-    //                 gPage++;
-    //                 gUrl = `https://content.guardianapis.com/search?show-fields=standfirst%2Cmain%2Cthumbnail&page=${gPage}&page-size=50&api-key=${guardianKey}`;
-    //                 guardian();
+    //infinite scroll
+    window.onscroll = function (e) {
+        if ($(document).height() - $(this).height() - 1 < $(this).scrollTop()) {    
+        
+            switch(currentSource.textContent) {
+                case "News Api.org":
+                    nPage++
+                    newsAPI();
+
+                case "The Guardian":
+                    gPage++;
+                    guardian();
                 
-    //             case "Event Registry":
-    //                 // eRPage++
-    //                 // eRUrl = ;
-    //                 // eventRegistery();
-    //             }                       
-    //     }
-    // }
+                case "Event Registry":
+                    eRPage++
+                    eventRegistery();
+                }       
+                          
+        }
+        e.preventDefault();
+    }
